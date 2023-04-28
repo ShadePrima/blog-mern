@@ -1,8 +1,12 @@
-import { body } from 'express-validator';
+import { body } from 'express-validator'
 
 export const registerValidation = [
-  body('email').isEmail(),
-  body('password').isLength({ min: 5 }),
-  body('fulllName').isLength({ min: 3 }),
-  body('avatar').optional().isURL(),
-];
+  body('email', 'bed mail format').isEmail(),
+  body('password', 'password must be at least 5 characters').isLength({
+    min: 5,
+  }),
+  body('fullName', 'full name must be at least 3 characters').isLength({
+    min: 3,
+  }),
+  body('avatarUrl', 'bad avatar reference').optional().isURL(),
+]
