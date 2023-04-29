@@ -7,6 +7,7 @@ import { validationResult } from 'express-validator'
 import { registerValidation } from './validations/auth.js'
 
 import UserModel from './models/User.js'
+import checkAuth from './utils/checkAuth.js'
 
 mongoose
   .connect(
@@ -29,7 +30,7 @@ app.post('/auth/login', async (req, res) => {
     const user = await UserModel.findOne({ email: req.body.email })
 
     if (!user) {
-      return req.status(404).json({
+      return res.status(404).json({
         message: 'User is not foud',
       })
     }
@@ -39,7 +40,7 @@ app.post('/auth/login', async (req, res) => {
       user._doc.passwordHash
     )
     if (!isValidPass) {
-      return req.status(404).json({
+      return res.status(400).json({
         message: 'Bad login or password',
       })
     }
@@ -102,6 +103,27 @@ app.post('/auth/register', registerValidation, async (req, res) => {
     console.log(err)
     res.status(500).json({
       message: 'Could not register',
+    })
+  }
+})
+
+app.get('/auth/me', checkAuth, async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.userId)
+
+    if (!user) {
+      return res.status(404).json({
+        message: 'User not found',
+      })
+    }
+
+    const { passwordHash, ...userData } = user._doc
+
+    res.json(userData)
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({
+      message: 'No access to the sites',
     })
   }
 })
