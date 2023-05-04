@@ -1,6 +1,7 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import multer from 'multer'
+import cors from 'cors'
 
 import { handleValidationErrors, checkAuth } from './utils/index.js'
 import { PostController, UserController } from './controllers/index.js'
@@ -36,6 +37,7 @@ app.get('/', (req, res) => {
 
 //tought our app to understand json
 app.use(express.json())
+app.use(cors())
 app.use('/uploads', express.static('uploads'))
 
 app.post(
@@ -58,7 +60,10 @@ app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
   })
 })
 
+app.get('/tags', PostController.getLastTags)
+
 app.get('/posts', PostController.getAll)
+app.get('/posts/tags', PostController.getLastTags)
 app.get('/posts/:id', PostController.getOne)
 app.post(
   '/posts',
