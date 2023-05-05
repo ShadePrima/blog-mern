@@ -1,4 +1,5 @@
 import express from 'express'
+import fs from 'fs'
 import mongoose from 'mongoose'
 import multer from 'multer'
 import cors from 'cors'
@@ -22,6 +23,9 @@ const app = express()
 
 const storage = multer.diskStorage({
   destination: (_, __, cb) => {
+    if (!fs.existsSync('uploads')) {
+      fs.mkdirSync('uploads')
+    }
     cb(null, 'uploads')
   },
   filename: (_, file, cb) => {
@@ -80,7 +84,7 @@ app.patch(
   PostController.update
 )
 
-app.listen(4444, (err) => {
+app.listen(process.env.PORT || 4444, (err) => {
   if (err) {
     return console.log(err)
   }
