@@ -13,7 +13,7 @@ import {
 } from './validations.js'
 
 mongoose
-  .connect(process.env.VERCEL_URI)
+  .connect(process.env.VERCELURI)
   .then(() => console.log('DB ok'))
   .catch((err) => console.log('DB error', err))
 
