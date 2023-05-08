@@ -13,9 +13,7 @@ import {
 } from './validations.js'
 
 mongoose
-  .connect(
-    'mongodb+srv://admin:qwqwqw@cluster0.rfsxxvy.mongodb.net/blog?retryWrites=true&w=majority'
-  )
+  .connect(process.env.VERCEL_URI)
   .then(() => console.log('DB ok'))
   .catch((err) => console.log('DB error', err))
 
